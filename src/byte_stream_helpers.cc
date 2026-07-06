@@ -10,7 +10,7 @@ void read( Reader& reader, uint64_t len, std::string& out )
 {
   out.clear();
 
-  while ( reader.bytes_buffered() and out.size() < len ) {
+  while ( reader.bytes_buffered() and out.size() < len ) {//有缓冲区数据且未读够len
     auto view = reader.peek();
 
     if ( view.empty() ) {
@@ -19,7 +19,7 @@ void read( Reader& reader, uint64_t len, std::string& out )
 
     view = view.substr( 0, len - out.size() ); // 不返回超过需要数量的字节
     out += view;
-    reader.pop( view.size() );
+    reader.pop( view.size() );//先读再删
   }
 }
 
@@ -35,7 +35,7 @@ Reader& ByteStream::reader()
 }
 
 const Reader& ByteStream::reader() const
-{
+{//编译期断言，确保 Reader 和 ByteStream 的大小相同，防止在 Reader 中添加成员变量
   static_assert( sizeof( Reader ) == sizeof( ByteStream ),
                  "请把成员变量加到 ByteStream 基类，不要加到 Reader 里" );
 

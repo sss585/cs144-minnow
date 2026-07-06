@@ -9,8 +9,25 @@ using namespace std;
 
 void get_URL( const string& host, const string& path )
 {
-  cerr << "Function called: get_URL(" << host << ", " << path << ")\n";
-  cerr << "Warning: get_URL() has not been implemented yet.\n";
+  Address addr( host, "http" );     // "http" 自动解析为 80 端口
+  TCPSocket sock;
+  sock.connect( addr );             // 连接服务器
+
+  string request = "GET " + path + " HTTP/1.1\r\n"
+                   "Host: " + host + "\r\n"
+                   "Connection: close\r\n"
+                   "\r\n";          // 构建 HTTP GET 请求
+
+  // 循环写完（write 可能只写了一部分）
+  while ( !request.empty() ) {
+    request.erase( 0, sock.write( request ) );
+  }
+
+  string response;
+  while ( !sock.eof() ) {           // 没到 EOF 就继续读
+    sock.read( response );          // read 内部会 clear，每次都是新数据
+    cout << response;               // 打印到标准输出
+  }
 }
 
 int main( int argc, char* argv[] )
