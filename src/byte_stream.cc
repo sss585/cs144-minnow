@@ -72,7 +72,7 @@ void Reader::pop( uint64_t len )
   uint64_t n = min( len, bytes_buffered() );//取len和缓冲区大小的最小值
   buffer_.erase(0,n); // 从前端移除 n 个字节
   bytes_popped_ +=n;
-  (void)len;
+  
 }
 
 uint64_t Reader::bytes_buffered() const

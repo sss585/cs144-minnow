@@ -40,7 +40,22 @@ int main()
         sr.execute( Insert { d.substr( off, sz ), off }.is_last( off + sz == offset ) );
       }
 
-      sr.execute( ReadAll { d } );
+      try {
+        sr.execute( ReadAll { d } );
+      } catch ( const exception& ) {
+        ByteStream bs2( NSEGS * MAX_SEG_LEN );
+        Reassembler r2;
+        for ( auto [off2, sz2] : seq_size )
+          r2.insert( off2, d.substr( off2, sz2 ), off2 + sz2 == offset, bs2.writer() );
+        string actual;
+        read( bs2.reader(), d.size(), actual );
+        size_t pos = 0;
+        while ( pos < actual.size() && pos < d.size() && actual[pos] == d[pos] )
+          pos++;
+        cerr << "rep " << rep_no << ": exp=" << d.size() << " got=" << actual.size()
+             << " mismatch @" << pos << endl;
+        throw;
+      }
     }
   } catch ( const exception& e ) {
     cerr << "Exception: " << e.what() << endl;
