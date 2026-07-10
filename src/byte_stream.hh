@@ -11,11 +11,19 @@ class Writer;
 class ByteStream
 {
 protected:
-  uint64_t capacity_;
-  // Please add any additional state to the ByteStream here, and not to the Writer and Reader interfaces.
+  //uint64--8字节，TCP32位还会回绕
+  uint64_t capacity_;//capacity_（能力） 是 ByteStream 的容量，单位是字节
+  // ↑ 在这里添加成员变量！不要加到 Writer/Reader 里。保护内部使用
+  std::string buffer_;//buffer_（缓冲区） 是 ByteStream 的缓冲区，存储已写入但还没被读走的数据
+
+  uint64_t bytes_pushed_ = 0;//bytes_pushed_（已写入字节数） 是 ByteStream 的累计写入字节总数
+  uint64_t bytes_popped_ = 0;//bytes_popped_（已读出字节数） 是 ByteStream 的累计已读出的字节总数
+
+  bool is_closed_ = false;//is_closed_（已关闭） 是 ByteStream 的流是否已关闭标志
+  bool has_error_ = false;//has_error_（出错） 是 ByteStream 的流是否出过错标志
 
 public:
-  explicit ByteStream( uint64_t capacity );
+  explicit ByteStream( uint64_t capacity );//禁止隐式类型转换
 
   // Helper functions (provided) to access the ByteStream's Reader and Writer interfaces
   Reader& reader();
