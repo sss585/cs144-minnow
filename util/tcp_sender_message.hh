@@ -6,19 +6,18 @@
 #include <string>
 
 /*
- * The TCPSenderMessage structure contains the information sent from a TCP sender to its receiver.
+ * TCPSenderMessage 是 TCP 发送方发给接收方的消息。
  *
- * It contains four fields:
+ * 包含四个字段：
  *
- * 1) The sequence number (seqno) of the beginning of the segment. If the SYN flag is set, this is the
- *    sequence number of the SYN flag. Otherwise, it's the sequence number of the beginning of the payload.
+ * 1) seqno：段起始的序列号。如果 SYN 标志被设置，这就是 SYN 的序列号；
+ *    否则就是 payload 起始的序列号。
  *
- * 2) The SYN flag. If set, it means this segment is the beginning of the byte stream, and that
- *    the seqno field contains the Initial Sequence Number (ISN) -- the zero point.
+ * 2) SYN 标志：如果设置，表示这是字节流的开头，seqno 字段存放的是 ISN（初始序列号）——即零点。
  *
- * 3) The payload: a substring (possibly empty) of the byte stream.
+ * 3) payload：字节流的一个子串（可能为空）。
  *
- * 4) The FIN flag. If set, it means the payload represents the ending of the byte stream.
+ * 4) FIN 标志：如果设置，表示 payload 代表字节流的末尾。
  */
 
 struct TCPSenderMessage
@@ -28,6 +27,6 @@ struct TCPSenderMessage
   Buffer payload {};
   bool FIN { false };
 
-  // How many sequence numbers does this segment use?
+  // 这个段占用了多少个序列号？
   size_t sequence_length() const { return SYN + payload.size() + FIN; }
 };

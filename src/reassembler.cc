@@ -6,6 +6,8 @@ using namespace std;
 void Reassembler::insert( uint64_t first_index, string data, bool is_last_substring, Writer& output )
 {//为对应字节序号
   uint64_t index_max=next_index_+output.available_capacity();//窗口大小以output为准
+  //是全部接受数据的上线，存在rea缓冲区是avail的一部分，不能重复计算
+  
   if(first_index>=index_max||output.available_capacity()<=total_buffer_bytes)
       return ;
   else if(first_index+data.size()>index_max){
