@@ -6,6 +6,7 @@
 
 #include <vector>
 
+// 以太网帧 = 头部 + 多段 payload
 struct EthernetFrame
 {
   EthernetHeader header {};

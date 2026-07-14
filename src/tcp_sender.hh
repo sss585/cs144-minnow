@@ -20,11 +20,12 @@ class TCPSender//TCP发送端
   Wrap32 isn_;//Initial Sequence Number — 初始序列号
   // 已发送未确认的段队列（用于重传）
   std::deque<TCPSenderMessage> message_uncheck_ {};//已发送未确认的消息序列  //queue FIFO队列，尾入头出无返回值
+  std::deque<TCPSenderMessage> message_unsend_ {};
   //  deque  内存离散的随机数组---可用于SACK控制\\\\\\\ vector不能操作头部--头部无法弹出
     
   //序列号管理
   uint64_t abs_next_seqno_{0};   //下一个可用的的TCP绝对序列号
-  uint64_t bytes_uncheck_ {};    //未确认的字节数
+  uint64_t allbytes_uncheck_ {};    //未确认和还未发送在缓存里的的字节数---总缓存数
 
   //1 2 3 4
   
@@ -58,7 +59,7 @@ public:
 
   // 发送端字节流主动 push 数据进来，准备发送
   void push( Reader& outbound_stream );
-
+  bool make_one();//测试要求构造send段逻辑与send分开
   // 需要发送的话返回一个 TCPSenderMessage，否则返回空 optional
   std::optional<TCPSenderMessage> maybe_send();
 
