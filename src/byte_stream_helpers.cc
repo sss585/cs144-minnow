@@ -3,9 +3,10 @@
 #include <cstdint>
 #include <stdexcept>
 
-/*
- * read: A helper function thats peeks and pops up to `len` bytes
- * from a ByteStream Reader into a string;
+/* 封装的通用read函数
+ * read框架，传入预计要读的字节数
+ * 假设底层peek可能不会一次返回所有的字节，循环读取
+ * 但是如果不能读取到目标字节数就报错
  */
 void read( Reader& reader, uint64_t len, std::string& out )
 {

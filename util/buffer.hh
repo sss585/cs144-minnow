@@ -13,7 +13,7 @@ public:
 
   // 从 string 构造（默认空字符串）
   Buffer( std::string str = {} ) : buffer_( make_shared<std::string>( std::move( str ) ) ) {}
-  // 隐式转换为 string_view / string&，方便像普通字符串一样使用
+  // 定义隐式转换为 string_view / string&，方便像普通字符串一样使用
   operator std::string_view() const { return *buffer_; }
   operator std::string&() { return *buffer_; }
 
