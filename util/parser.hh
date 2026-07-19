@@ -207,7 +207,7 @@ public:
 // Helper to serialize any object (without constructing a Serializer of the caller's own)
 template<class T>
 std::vector<Buffer> serialize( const T& obj )
-{
+{//全局版本的，自动调用每个结构体版本的
   Serializer s;
   obj.serialize( s );
   return s.output();
@@ -218,6 +218,6 @@ template<class T>
 bool parse( T& obj, const std::vector<Buffer>& buffers )
 {
   Parser p { buffers };
-  obj.parse( p );
+  obj.parse( p );//是把二进制转换成自己，但是这个二进制是别人给的
   return not p.has_error();
 }
